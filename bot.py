@@ -4,17 +4,33 @@ import discord
 import tts_engine
 
 # ===== CONFIG =====
-TARGET_CHANNEL_IDS = {
-    1089577790795432018,
-    1136998778411425823
-}
-MAX_LEN = 200
-OWNER_ID = 408988653772341241
-# ==================
-
 TOKEN = os.getenv("DISCORD_TOKEN")
 if not TOKEN:
     raise SystemExit("Missing DISCORD_TOKEN env var")
+
+# อ่านจาก environment หรือใช้ค่า default
+OWNER_ID = int(os.getenv("OWNER_ID", "408988653772341241"))
+MAX_LEN = int(os.getenv("MAX_LEN", "200"))
+
+# อ่าน channel IDs จาก environment (คั่นด้วย comma)
+TARGET_CHANNEL_IDS = set()
+if os.getenv("TARGET_CHANNEL_IDS"):
+    TARGET_CHANNEL_IDS = {
+        int(channel_id.strip())
+        for channel_id in os.getenv("TARGET_CHANNEL_IDS").split(",")
+    }
+else:
+    # ค่า default ถ้าไม่ได้ตั้งค่า
+    TARGET_CHANNEL_IDS = {
+        1089577790795432018,
+        1136998778411425823
+    }
+
+print(f"🤖 Discord TTS Bot Configuration:")
+print(f"   Owner ID: {OWNER_ID}")
+print(f"   Max Length: {MAX_LEN}")
+print(f"   Target Channels: {TARGET_CHANNEL_IDS}")
+# ==================
 
 # ===== DISCORD BOT =====
 intents = discord.Intents.default()

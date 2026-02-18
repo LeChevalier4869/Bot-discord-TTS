@@ -1,0 +1,15 @@
+[Unit]
+Description=Discord TTS Bot
+After=network.target
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=%h/discord-tts-bot
+Environment="PATH=%h/discord-tts-bot/venv/bin"
+ExecStart=%h/discord-tts-bot/venv/bin/python bot.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
