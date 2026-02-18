@@ -3,11 +3,15 @@ import queue
 import threading
 import subprocess
 import tempfile
+import re
 import discord
 
 # ===== CONFIG =====
 BT_SINK = "bluez_output.0F_13_9F_39_84_62.1"
-TARGET_CHANNEL_ID = 1089577790795432018
+TARGET_CHANNEL_IDS = {
+    1089577790795432018,
+    1136998778411425823
+}
 #VOICE_TH = "th-TH-PremwadeeNeural"
 VOICE_TH = "th-TH-NiwatNeural"
 MAX_LEN = 200
@@ -65,6 +69,7 @@ threading.Thread(target=tts_worker, daemon=True).start()
 intents = discord.Intents.default()
 intents.message_content = True
 intents.guild_messages = True
+intents.members = True
 
 class Client(discord.Client):
     async def on_ready(self):
@@ -75,7 +80,7 @@ class Client(discord.Client):
             return
 
         # อ่านเฉพาะห้องที่กำหนด
-        if message.channel.id != TARGET_CHANNEL_ID:
+        if message.channel.id not in TARGET_CHANNEL_IDS:
             return
 
         content = (message.content or "").strip()
@@ -83,9 +88,18 @@ class Client(discord.Client):
             return
 
         content = content.replace("\n", " ")
+
+        # สร้างรายชื่อคนที่ถูก mention
+        mentioned = [u.display_name for u in message.mentions]
+        mention_text = f" ... มีการอ้างถึง {', '.join(mentioned)}" if mentioned else ""
+
+        # ลบ mention ออกจากเนื้อหา
+        content = re.sub(r"<@[!&]?\d+>", "", content)
+        content = re.sub(r"<#\d+>", "", content)
+        content = content.strip()
         content = content[:MAX_LEN]
 
-        text = f"{message.author.display_name} พูดว่า {content}"
+        text = f"ข้อความจาก {message.author.display_name}{mention_text} ... {content}"
         print(text)
 
         tts_q.put(text)
