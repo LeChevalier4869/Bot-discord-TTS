@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 source venv/bin/activate
-#export DISCORD_TOKEN='REDACTED'
+set -a; source .env; set +a
 python -u bot.py
