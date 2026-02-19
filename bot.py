@@ -9,7 +9,7 @@ if not TOKEN:
     raise SystemExit("Missing DISCORD_TOKEN env var")
 
 # อ่านจาก environment หรือใช้ค่า default
-OWNER_ID = int(os.getenv("OWNER_ID", "408988653772341241"))
+OWNER_ID = int(os.getenv("OWNER_ID", "408988653772341248"))
 MAX_LEN = int(os.getenv("MAX_LEN", "200"))
 
 # อ่าน channel IDs จาก environment (คั่นด้วย comma)
@@ -23,7 +23,8 @@ else:
     # ค่า default ถ้าไม่ได้ตั้งค่า
     TARGET_CHANNEL_IDS = {
         1089577790795432018,
-        1136998778411425823
+        1136998778411425823,
+	857474300034416701
     }
 
 print(f"🤖 Discord TTS Bot Configuration:")
